@@ -11,6 +11,70 @@
     <link rel="stylesheet" href="/css/components.css">
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛍️</text></svg>">
+    <style>
+    /* 1. ปรับแต่งแถบควบคุมให้ดูพรีเมียม (Glassmorphism) */
+    .filter-controls-premium {
+        background: #0a0a0a; /* ดำสนิท */
+        padding: 20px;
+        border-radius: 15px;
+        border-bottom: 3px solid #b30000; /* เส้นใต้สีแดงเข้ม */
+        display: flex;
+        gap: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    /* 2. ช่องค้นหา (Search Box) */
+    .search-box-luxe {
+        flex: 2;
+        background: #1a1a1a;
+        border: 1px solid #333;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        padding: 5px 15px;
+        transition: 0.3s;
+    }
+
+    .search-box-luxe:focus-within {
+        border-color: #ff0000; /* ขอบแดงเมื่อกดพิมพ์ */
+        box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+    }
+
+    #product-search {
+        background: transparent;
+        border: none;
+        color: #ffffff;
+        padding: 10px;
+        width: 100%;
+        outline: none;
+    }
+
+    /* 3. ช่องเลือกหมวดหมู่ (Category Filter) */
+    .category-filter-luxe select {
+        background: #1a1a1a;
+        color: #ffffff;
+        border: 1px solid #333;
+        padding: 12px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+        appearance: none; /* ลบลูกศรเดิม */
+        min-width: 150px;
+    }
+
+    .category-filter-luxe select:hover {
+        border-color: #ff0000;
+        color: #ff0000;
+    }
+
+    /* 4. ตกแต่งหัวข้อสินค้าให้เข้าธีม */
+    .section-title-luxe {
+        color: #ffffff;
+        text-shadow: 2px 2px 0px #b30000; /* เงาตัวอักษรสีแดง */
+        font-weight: bold;
+        letter-spacing: 2px;
+    }
+</style>
 </head>
 
 <body>
@@ -57,5 +121,6 @@
     <script src="/js/auth.js"></script>
     <script src="/js/products.js"></script>
 </body>
+
 
 </html>
