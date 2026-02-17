@@ -190,7 +190,7 @@ function generateId() {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
 
-// ===== Floating Contact Button =====
+// ===== Floating Contact Sidebar (Refactor for Luxe) =====
 async function loadContactChannels() {
     if (window.location.pathname.includes('admin')) return;
 
@@ -198,52 +198,50 @@ async function loadContactChannels() {
         if (typeof db === 'undefined') return;
 
         const snapshot = await db.collection('contact_channels').orderBy('createdAt', 'desc').get();
-
         if (snapshot.empty) return;
 
         const container = document.createElement('div');
-        container.className = 'floating-contact-container';
+        container.className = 'luxe-contact-sidebar';
+        container.id = 'luxe-sidebar';
 
         let contactsHtml = '';
         snapshot.forEach(doc => {
             const c = doc.data();
-            let icon = '🔗';
-            let bgColor = c.color || '#333';
+            let iconText = '🔗';
+            let bgColor = c.color || 'var(--color-surface)';
 
-            if (c.type === 'line') { icon = '💬'; bgColor = c.color || '#06C755'; }
-            if (c.type === 'facebook') { icon = '📘'; bgColor = c.color || '#1877F2'; }
-            if (c.type === 'instagram') { icon = '📸'; bgColor = c.color || '#E1306C'; }
-            if (c.type === 'tiktok') { icon = '🎵'; bgColor = c.color || '#000000'; }
-            if (c.type === 'phone') { icon = '📞'; bgColor = c.color || '#2ECC71'; }
+            // Use simplified labels or icons for the circular buttons
+            if (c.type === 'line') { iconText = 'LINE'; bgColor = '#06C755'; }
+            if (c.type === 'telegram') { iconText = '✈️'; bgColor = '#0088cc'; }
+            if (c.type === 'facebook') { iconText = 'FB'; bgColor = '#1877F2'; }
+            if (c.type === 'instagram') { iconText = 'IG'; bgColor = '#E1306C'; }
+            if (c.type === 'tiktok') { iconText = 'TK'; bgColor = '#000000'; }
+            if (c.type === 'phone') { iconText = '📞'; bgColor = '#2ECC71'; }
 
             contactsHtml += `
-                <a href="${c.value}" target="_blank" class="contact-item">
-                    <div class="contact-icon" style="background:${bgColor}">${icon}</div>
-                    <div class="contact-info">
-                        <span class="contact-name">${c.name}</span>
-                        <span class="contact-desc">${c.type.toUpperCase()}</span>
-                    </div>
+                <a href="${c.value}" target="_blank" class="luxe-contact-item" style="background:${bgColor}" title="${c.name}">
+                    <span style="color:white; font-weight:900; font-size: 14px;">${iconText}</span>
                 </a>
             `;
         });
 
         container.innerHTML = `
-            <div class="contact-list-popup" id="contact-popup">
-                <div class="contact-list-header">ติดต่อเรา</div>
-                ${contactsHtml}
+            <div class="luxe-contact-toggle" onclick="toggleContactSidebar()">
+                <span>◀</span>
             </div>
-            <div class="floating-contact-btn" onclick="toggleContactPopup()">
-                💬
+            <div class="luxe-contact-body">
+                <div class="luxe-contact-header">CONTACT</div>
+                ${contactsHtml}
             </div>
         `;
 
         document.body.appendChild(container);
 
+        // Auto-close on click outside
         document.addEventListener('click', (e) => {
-            const popup = document.getElementById('contact-popup');
-            const btn = document.querySelector('.floating-contact-btn');
-            if (popup && popup.classList.contains('active') && !popup.contains(e.target) && !btn.contains(e.target)) {
-                popup.classList.remove('active');
+            const sidebar = document.getElementById('luxe-sidebar');
+            if (sidebar && sidebar.classList.contains('active') && !sidebar.contains(e.target)) {
+                sidebar.classList.remove('active');
             }
         });
 
@@ -252,7 +250,7 @@ async function loadContactChannels() {
     }
 }
 
-function toggleContactPopup() {
-    const popup = document.getElementById('contact-popup');
-    if (popup) popup.classList.toggle('active');
+function toggleContactSidebar() {
+    const sidebar = document.getElementById('luxe-sidebar');
+    if (sidebar) sidebar.classList.toggle('active');
 }
