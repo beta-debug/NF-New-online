@@ -11,84 +11,137 @@
     <link rel="stylesheet" href="/css/components.css">
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛍️</text></svg>">
+    
     <style>
-    /* 1. ปรับแต่งแถบควบคุมให้ดูพรีเมียม (Glassmorphism) */
-    .filter-controls-premium {
-        background: #0a0a0a; /* ดำสนิท */
-        padding: 20px;
-        border-radius: 15px;
-        border-bottom: 3px solid #b30000; /* เส้นใต้สีแดงเข้ม */
-        display: flex;
-        gap: 15px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
+        :root {
+            --luxe-red: #cc0000;
+            --dark-bg: #0f0f0f;
+            --input-bg: #1a1a1a;
+        }
 
-    /* 2. ช่องค้นหา (Search Box) */
-    .search-box-luxe {
-        flex: 2;
-        background: #1a1a1a;
-        border: 1px solid #333;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        padding: 5px 15px;
-        transition: 0.3s;
-    }
+        /* ปรับแต่งส่วนหัวข้อ */
+        .section-title-luxe {
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
 
-    .search-box-luxe:focus-within {
-        border-color: #ff0000; /* ขอบแดงเมื่อกดพิมพ์ */
-        box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
-    }
+        .section-subtitle-luxe {
+            color: #888;
+            font-size: 0.9rem;
+        }
 
-    #product-search {
-        background: transparent;
-        border: none;
-        color: #ffffff;
-        padding: 10px;
-        width: 100%;
-        outline: none;
-    }
+        /* Container ของ Filter */
+        .filter-controls-premium {
+            background: var(--dark-bg);
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid #222;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            margin: 30px auto;
+            max-width: 900px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
 
-    /* 3. ช่องเลือกหมวดหมู่ (Category Filter) */
-    .category-filter-luxe select {
-        background: #1a1a1a;
-        color: #ffffff;
-        border: 1px solid #333;
-        padding: 12px 20px;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: 0.3s;
-        appearance: none; /* ลบลูกศรเดิม */
-        min-width: 150px;
-    }
+        /* ช่องค้นหา (Search Box) */
+        .search-box-luxe {
+            flex: 2;
+            background: var(--input-bg);
+            border: 1.5px solid #333;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            padding: 8px 20px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
 
-    .category-filter-luxe select:hover {
-        border-color: #ff0000;
-        color: #ff0000;
-    }
+        .search-box-luxe:focus-within {
+            border-color: var(--luxe-red);
+            box-shadow: 0 0 15px rgba(204, 0, 0, 0.25);
+            transform: translateY(-2px);
+        }
 
-    /* 4. ตกแต่งหัวข้อสินค้าให้เข้าธีม */
-    .section-title-luxe {
-        color: #ffffff;
-        text-shadow: 2px 2px 0px #b30000; /* เงาตัวอักษรสีแดง */
-        font-weight: bold;
-        letter-spacing: 2px;
-    }
-</style>
+        .search-icon-luxe {
+            font-size: 1.1rem;
+            margin-right: 12px;
+            filter: grayscale(1) brightness(1.5);
+        }
+
+        #product-search {
+            background: transparent;
+            border: none;
+            color: #fff;
+            padding: 10px 0;
+            width: 100%;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        #product-search::placeholder {
+            color: #555;
+            font-weight: 300;
+        }
+
+        /* ช่องเลือกหมวดหมู่ (Category Filter) */
+        .category-filter-luxe {
+            flex: 1;
+            position: relative;
+        }
+
+        #category-select {
+            width: 100%;
+            background: var(--input-bg);
+            color: #fff;
+            border: 1.5px solid #333;
+            border-radius: 12px;
+            padding: 15px 25px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            appearance: none;
+            transition: all 0.3s ease;
+        }
+
+        #category-select:hover {
+            border-color: var(--luxe-red);
+            background: #222;
+        }
+
+        /* ลูกศรแต่งใหม่ */
+        .category-filter-luxe::after {
+            content: '↓';
+            font-size: 0.7rem;
+            color: var(--luxe-red);
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        /* ปรับแต่ง Option ภายใน Select */
+        #category-select option {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 10px;
+        }
+    </style>
 </head>
 
 <body>
     <div id="header-placeholder"></div>
 
     <main class="page-content">
-        <section class="section">
-            <div class="container">
+        <section class="section-luxe">
+            <div class="container luxe-centered">
                 <div class="text-center fade-in">
-                    <h1 class="section-title">สินค้าทั้งหมด</h1>
-                    <p class="section-subtitle">เลือกสินค้าที่ใช่สำหรับคุณ สั่งซื้อง่าย จ่ายสะดวก</p>
+                    <h1 class="section-title-luxe">สินค้าทั้งหมด</h1>
+                    <p class="section-subtitle-luxe">เลือกสินค้าที่ใช่สำหรับคุณ สั่งซื้อง่าย จ่ายสะดวก</p>
                 </div>
 
-                <!-- Filters & Search -->
                 <div class="filter-controls-premium fade-in">
                     <div class="search-box-luxe">
                         <span class="search-icon-luxe">🔍</span>
@@ -121,6 +174,5 @@
     <script src="/js/auth.js"></script>
     <script src="/js/products.js"></script>
 </body>
-
 
 </html>
