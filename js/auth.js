@@ -125,9 +125,10 @@ async function handleRegister(event) {
         const referredBy = sessionStorage.getItem('referralCode');
         if (referredBy && referredBy !== userCredential.user.uid) {
             userData.referredBy = referredBy;
-            // Increment referrer count
+            // Increment referrer count and points (1 person = 5 points)
             db.collection('users').doc(referredBy).update({
-                referralCount: firebase.firestore.FieldValue.increment(1)
+                referralCount: firebase.firestore.FieldValue.increment(1),
+                points: firebase.firestore.FieldValue.increment(5)
             }).catch(console.error);
         }
 
