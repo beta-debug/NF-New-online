@@ -39,6 +39,7 @@
     --gradient-primary: linear-gradient(135deg, #e50914 0%, #9b080f 100%);
     --gradient-hero: linear-gradient(180deg, rgba(10, 10, 10, 0) 0%, rgba(10, 10, 10, 0.6) 50%, #0a0a0a 100%);
     --gradient-card: linear-gradient(145deg, #181818 0%, #0f0f0f 100%);
+    --gradient-gold: linear-gradient(135deg, #f5c518 0%, #ffd633 100%);
     --gradient-luxe: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
 
     /* Typography */
