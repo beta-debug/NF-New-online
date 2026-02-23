@@ -312,25 +312,46 @@ function filterOrders(filter) {
         tab.classList.toggle('active', tab.dataset.filter === filter);
     });
 
-    // Filter orders
+    applyOrderSearch();
+}
+
+function applyOrderSearch() {
+    const container = document.getElementById('admin-orders-list');
+    if (!container) return;
+
+    const searchInput = document.getElementById('order-search-input');
+    const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
+
+    // Filter by tab
     let filtered = allAdminOrders;
-    if (filter !== 'all') {
-        filtered = allAdminOrders.filter(order => order.status === filter);
+    if (currentOrderFilter !== 'all') {
+        filtered = allAdminOrders.filter(order => order.status === currentOrderFilter);
     }
 
+    // Filter by search query
+    if (query) {
+        filtered = filtered.filter(order => {
+            const name = (order.userName || '').toLowerCase();
+            const email = (order.userEmail || '').toLowerCase();
+            const product = (order.productName || '').toLowerCase();
+            return name.includes(query) || email.includes(query) || product.includes(query);
+        });
+    }
+
+    const filterNames = {
+        'all': 'ทั้งหมด',
+        'pending': 'ออเดอร์ใหม่',
+        'processing': 'กำลังดำเนินการ',
+        'paid': 'ชำระแล้ว',
+        'cancelled': 'ยกเลิก'
+    };
+
     if (filtered.length === 0) {
-        const filterNames = {
-            'all': 'ทั้งหมด',
-            'pending': 'ออเดอร์ใหม่',
-            'processing': 'กำลังดำเนินการ',
-            'paid': 'ชำระแล้ว',
-            'cancelled': 'ยกเลิก'
-        };
         container.innerHTML = `
         <div class="empty-state" style="padding: var(--space-8);">
-          <div class="empty-state-icon">📋</div>
-          <h3 class="empty-state-title">ไม่มีออเดอร์</h3>
-          <p class="empty-state-text">ไม่พบออเดอร์ในหมวด "${filterNames[filter] || filter}"</p>
+          <div class="empty-state-icon">🔍</div>
+          <h3 class="empty-state-title">ไม่พบออเดอร์</h3>
+          <p class="empty-state-text">${query ? `ไม่พบคำค้นหา "${query}"` : `ไม่มีออเดอร์ในหมวด "${filterNames[currentOrderFilter] || currentOrderFilter}"`}</p>
         </div>`;
         return;
     }
@@ -379,9 +400,27 @@ function createAdminOrderCard(order) {
       </div>
     </div>
     <div class="order-card-price">฿${formatPrice(order.price)}</div>
-    <button class="order-card-menu" onclick="showAdminOrderMenu('${order.id}')" title="จัดการออเดอร์">☰</button>
+    <div style="display:flex;gap:var(--space-2);align-items:center;">
+      <button class="order-card-menu" onclick="showAdminOrderMenu('${order.id}')" title="จัดการออเดอร์">☰</button>
+      <button class="order-card-delete" onclick="deleteAdminOrder('${order.id}', '${(order.productName || '').replace(/'/g, "\\'").replace(/"/g, '&quot;')}', '${(order.userName || order.userEmail || 'ลูกค้า').replace(/'/g, "\\'").replace(/"/g, '&quot;')}')" title="ลบออเดอร์">🗑️</button>
+    </div>
   `;
     return card;
+}
+
+async function deleteAdminOrder(orderId, productName, customerName) {
+    if (!confirm(`ลบออเดอร์ "${productName}" ของ "${customerName}" หรือไม่?\n\nการลบจะไม่สามารถกู้คืนได้`)) return;
+    try {
+        await db.collection('orders').doc(orderId).delete();
+        // Remove from local cache
+        allAdminOrders = allAdminOrders.filter(o => o.id !== orderId);
+        updateOrderTabCounts();
+        applyOrderSearch();
+        showToast('ลบออเดอร์สำเร็จ ✅', 'success');
+    } catch (error) {
+        console.error('Error deleting order:', error);
+        showToast('เกิดข้อผิดพลาดในการลบ', 'error');
+    }
 }
 
 // Admin order management popup
@@ -454,7 +493,10 @@ async function showAdminOrderMenu(orderId) {
         </div>
       </div>
 
-      <button class="btn btn-primary btn-block btn-lg" onclick="updateOrderAdmin('${orderId}')">💾 บันทึกการเปลี่ยนแปลง</button>
+      <div style="display:flex;gap:var(--space-3);margin-top:var(--space-2);">
+        <button class="btn btn-primary btn-block btn-lg" onclick="updateOrderAdmin('${orderId}')">💾 บันทึก</button>
+        <button class="btn btn-danger btn-lg" style="white-space:nowrap;" onclick="closeAdminOrderModal(); deleteAdminOrder('${orderId}', '${(order.productName || '').replace(/'/g, "\\'").replace(/"/g, '&quot;')}', '${(order.userName || order.userEmail || 'ลูกค้า').replace(/'/g, "\\'").replace(/"/g, '&quot;')}')">🗑️ ลบ</button>
+      </div>
     `;
 
         document.body.appendChild(backdrop);

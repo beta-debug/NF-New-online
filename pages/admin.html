@@ -216,6 +216,14 @@
                                 ยกเลิก
                             </button>
                         </div>
+                        <!-- Search Box -->
+                        <div style="margin: var(--space-4) 0; position: relative;">
+                            <span
+                                style="position:absolute;left:var(--space-4);top:50%;transform:translateY(-50%);font-size:var(--text-base);pointer-events:none;">🔍</span>
+                            <input type="text" id="order-search-input" class="form-input"
+                                placeholder="ค้นหาชื่อลูกค้า, อีเมล หรือสินค้า..." oninput="applyOrderSearch()"
+                                style="padding-left: var(--space-10);">
+                        </div>
                         <div id="admin-orders-list">
                             <div class="loader">
                                 <div class="spinner"></div>

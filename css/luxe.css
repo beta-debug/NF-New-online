@@ -71,6 +71,23 @@ p,
     width: 100%;
     height: 100%;
     object-fit: cover;
+    opacity: 0.6;
+    /* Slight fade to allow text to pop */
+    mix-blend-mode: overlay;
+    /* Optional: for a cinematic feel */
+}
+
+/* Gradient overlay to ensure text readability against any image */
+.hero-luxe::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(to top, var(--color-bg), transparent);
+    pointer-events: none;
+    z-index: 1;
 }
 
 .hero-bg-luxe::after {
