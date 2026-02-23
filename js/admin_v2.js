@@ -265,6 +265,9 @@ function previewQrUrl() {
 }
 
 // ===== Order Management (Admin) =====
+let allAdminOrders = [];
+let currentOrderFilter = 'all';
+
 async function loadAdminOrders() {
     const container = document.getElementById('admin-orders-list');
     if (!container) return;
@@ -275,24 +278,92 @@ async function loadAdminOrders() {
         const snapshot = await db.collection('orders').orderBy('createdAt', 'desc').get();
 
         if (snapshot.empty) {
+            allAdminOrders = [];
             container.innerHTML = `
         <div class="empty-state">
           <div class="empty-state-icon">📋</div>
           <h3 class="empty-state-title">ยังไม่มีออเดอร์</h3>
           <p class="empty-state-text">ออเดอร์จากลูกค้าจะแสดงที่นี่</p>
         </div>`;
+            updateOrderTabCounts();
             return;
         }
 
-        container.innerHTML = '';
+        allAdminOrders = [];
         snapshot.forEach(doc => {
-            const order = { id: doc.id, ...doc.data() };
-            container.appendChild(createAdminOrderCard(order));
+            allAdminOrders.push({ id: doc.id, ...doc.data() });
         });
+
+        updateOrderTabCounts();
+        filterOrders(currentOrderFilter);
     } catch (error) {
         console.error('Error loading admin orders:', error);
         container.innerHTML = '<div style="text-align:center;color:var(--color-danger);padding:var(--space-8);">เกิดข้อผิดพลาด</div>';
     }
+}
+
+function filterOrders(filter) {
+    currentOrderFilter = filter;
+    const container = document.getElementById('admin-orders-list');
+    if (!container) return;
+
+    // Update active tab
+    document.querySelectorAll('.order-filter-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.filter === filter);
+    });
+
+    // Filter orders
+    let filtered = allAdminOrders;
+    if (filter !== 'all') {
+        filtered = allAdminOrders.filter(order => order.status === filter);
+    }
+
+    if (filtered.length === 0) {
+        const filterNames = {
+            'all': 'ทั้งหมด',
+            'pending': 'ออเดอร์ใหม่',
+            'processing': 'กำลังดำเนินการ',
+            'paid': 'ชำระแล้ว',
+            'cancelled': 'ยกเลิก'
+        };
+        container.innerHTML = `
+        <div class="empty-state" style="padding: var(--space-8);">
+          <div class="empty-state-icon">📋</div>
+          <h3 class="empty-state-title">ไม่มีออเดอร์</h3>
+          <p class="empty-state-text">ไม่พบออเดอร์ในหมวด "${filterNames[filter] || filter}"</p>
+        </div>`;
+        return;
+    }
+
+    container.innerHTML = '';
+    filtered.forEach(order => {
+        container.appendChild(createAdminOrderCard(order));
+    });
+}
+
+function updateOrderTabCounts() {
+    const tabs = document.querySelectorAll('.order-filter-tab');
+    tabs.forEach(tab => {
+        const filter = tab.dataset.filter;
+        let count = 0;
+        if (filter === 'all') {
+            count = allAdminOrders.length;
+        } else {
+            count = allAdminOrders.filter(o => o.status === filter).length;
+        }
+        // Update count badge
+        let badge = tab.querySelector('.order-tab-count');
+        if (count > 0) {
+            if (!badge) {
+                badge = document.createElement('span');
+                badge.className = 'order-tab-count';
+                tab.appendChild(badge);
+            }
+            badge.textContent = count;
+        } else if (badge) {
+            badge.remove();
+        }
+    });
 }
 
 function createAdminOrderCard(order) {

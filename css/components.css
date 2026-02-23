@@ -776,6 +776,82 @@
     border-radius: var(--radius-sm);
 }
 
+/* ===== Order Filter Tabs ===== */
+.order-filter-tabs {
+    display: flex;
+    gap: var(--space-1);
+    margin-bottom: var(--space-6);
+    border-bottom: 2px solid var(--color-border);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.order-filter-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.order-filter-tab {
+    position: relative;
+    padding: var(--space-3) var(--space-5);
+    font-weight: var(--font-medium);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    cursor: pointer;
+    transition: color var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.order-filter-tab:hover {
+    color: var(--color-text-secondary);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.order-filter-tab.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+    background: rgba(229, 9, 20, 0.05);
+}
+
+.order-tab-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    font-size: 11px;
+    font-weight: var(--font-bold);
+    color: white;
+    background: var(--color-primary);
+    border-radius: var(--radius-pill);
+    line-height: 1;
+}
+
+.order-filter-tab.active .order-tab-count {
+    background: var(--color-primary);
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .order-filter-tabs {
+        gap: 0;
+    }
+
+    .order-filter-tab {
+        padding: var(--space-2) var(--space-3);
+        font-size: var(--text-xs);
+    }
+}
+
 /* ===== Order Card ===== */
 .order-card {
     background: var(--color-surface);

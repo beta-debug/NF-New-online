@@ -193,9 +193,29 @@
                     <div class="admin-panel">
                         <h2 class="admin-panel-title">📋 ออเดอร์ทั้งหมด</h2>
                         <p
-                            style="font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: var(--space-6);">
+                            style="font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: var(--space-4);">
                             กดปุ่ม ☰ เพื่อจัดการออเดอร์ เปลี่ยนสถานะ และส่งอีเมล/รหัสผ่านให้ลูกค้า
                         </p>
+                        <!-- Order Filter Tabs -->
+                        <div class="order-filter-tabs">
+                            <button class="order-filter-tab active" data-filter="all" onclick="filterOrders('all')">
+                                ทั้งหมด
+                            </button>
+                            <button class="order-filter-tab" data-filter="pending" onclick="filterOrders('pending')">
+                                ออเดอร์ใหม่
+                            </button>
+                            <button class="order-filter-tab" data-filter="processing"
+                                onclick="filterOrders('processing')">
+                                กำลังดำเนินการ
+                            </button>
+                            <button class="order-filter-tab" data-filter="paid" onclick="filterOrders('paid')">
+                                ชำระแล้ว
+                            </button>
+                            <button class="order-filter-tab" data-filter="cancelled"
+                                onclick="filterOrders('cancelled')">
+                                ยกเลิก
+                            </button>
+                        </div>
                         <div id="admin-orders-list">
                             <div class="loader">
                                 <div class="spinner"></div>
